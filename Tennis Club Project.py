@@ -156,7 +156,14 @@ def delete_player(index):
     else:
         my_conn = dbconnect('tennis_club.db')
         c = my_conn.cursor()
-        
+        y = c.execute("SELECT * FROM ranking WHERE Position = {0};".format(index)).fetchall()
+        confirmation = input("ΠΡΟΣΟΧΉ!!!! Η διαγραφή είναι οριστική κι αμετάκλητη!\nΘα χαθούν ΌΛΑ τα δεδομένα του παίκτη.\nΘέλετε σίγουρα να διαγράψετε τον παίκτη {0} {1}; ".format(y[0][1],y[0][2])).upper()
+        while confirmation not in ('ΝΑΊΝΑΙΟΧΙΌΧΙ') or confirmation == 'Ι':
+                confirmation = input("Παρακαλώ απαντήστε με Ναι ή Όχι.\nΠΡΟΣΟΧΉ!!!! Η διαγραφή είναι οριστική κι αμετάκλητη!\nΘα χαθούν ΌΛΑ τα δεδομένα του παίκτη. \nΘέλετε σίγουρα να διαγράψετε τον παίκτη {0} {1}; ".format(y[0][1],y[0][2])).upper()
+        if confirmation in ('ΌΧΙΟΧΙ'):
+            my_conn.commit()
+            my_conn.close()
+            return print("Η διαγραφή ακυρώθηκε από τον χρήστη.")
         c.execute("DELETE FROM ranking WHERE Position={0};".format(index)) #Διαγραφή παίκτη
         c.execute("UPDATE ranking SET Position = Position - 1 WHERE Position > {0};".format(index)) #Ανανέωση λίστας
         
@@ -373,6 +380,8 @@ while True:
         elif choice == 4:
             if empty_check(1):
                 print("Η κατάταξη δεν περιέχει παίκτες!")
+            elif empty_check(2):
+                print("Η κατάταξη περιέχει μόνο έναν παίκτη άρα δεν ορίζεται πρόκληση.")
             else:
                 try:
                     p1 = (int(input("Δώστε τη θέση κατάταξης του παίκτη που προκαλεί: ")))
