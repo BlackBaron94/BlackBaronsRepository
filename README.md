@@ -1,4 +1,4 @@
-# TennisClub
+# TennisLadder
 Εγχειρίδο Χρήσης Εφαρμογής “Tennis Ladder”
 
 
